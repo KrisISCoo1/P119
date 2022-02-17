@@ -1,0 +1,26 @@
+body{
+    background-color: lightgreen;
+}
+#score{
+    margin-left: 20px;
+    font-size: medium;
+}
+#time{
+    font-size: medium;
+    float: right;
+    margin-right: 20px;
+}
+#askSketch{
+    color: red;
+}
+canvas{
+    margin-top: 20px;
+    border-radius: 140px;
+}
+#show_sketch{
+    float: right;
+    margin-right: 20px;
+}
+h1{
+    margin-left: 120px;
+}
