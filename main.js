@@ -9,19 +9,49 @@ timer_check="";
 drawn_sketch="";
 answer_holder="";
 score=0;
+function updateCanvas(){
+    clearCanvas();
+    random_no = Math.floor((Math.random()*array_1.length)+1);
+    console.log(random_no);
+    Element_of_array = array_1[random_no];
+    console.log(Element_of_array);
+    document.getElementById("askSketch").innerHTML="Sketch to be drawn : "+Element_of_array;
+    }
+    function preload() {
+        classifier=ml5.imageClassifier('doodlenet');
+    }
+    function setup(){
+        canvas=createCanvas(280,280);
+        canvas.center();
+        background("white");
+        canvas.mouseReleased(classifyCanvas);
+    }
 function draw(){
     strokeWeight(10);
-  stroke("#001c80");
+  stroke(0);
   if (mouseIsPressed) {
       line(pmouseX,pmouseY,mouseX,mouseY);
   }  
 check_sketch();
-if (drawn_sketch==sketch) {
+if (drawn_sketch==Element_of_array) {
     answer_holder="set";
     score++;
     document.getElementById("score").innerHTML="SCORE : "+score;
 }
 }
+function classifyCanvas(){
+    classifier.classify(canvas,gotResult);
+    }
+    function gotResult(error,results) {
+        if (error) {
+            console.log("E");
+        }
+        console.log(results);
+        document.getElementById("label").innerHTML="Your sketch:"+drawn_sketch;
+        document.getElementById("confidence").innerHTML="Confidence:"+Math.round(results[0].confidence*100)+"%";
+        utterThis=new SpeechSynthesisUtterance(results[0].label);
+        SpeechSynthesis.speak(utterThis);
+    }
 function check_sketch(){
     timer_counter++;
     document.getElementById("timer").innerHTML="TIMER : "+timer_counter;
@@ -36,36 +66,6 @@ function check_sketch(){
         updateCanvas();
     }
 }
-function updateCanvas(){
-background="white";
-random_no = Math.floor((Math.random()*array_1.length)+1);
-console.log(random_no);
-Element_of_array = array_1[random_no];
-console.log(Element_of_array);
-document.getElementById("askSketch").innerHTML="Sketch to be drawn : "+Element_of_array;
-}
-function setup(){
-    canvas=createCanvas(280,280);
-    canvas.center();
-    background("white");
-    canvas.mouseReleased(classifyCanvas);
-}
 function clearCanvas() {
     background("white");
-}
-function preload() {
-    classifier=ml5.imageClassifier('doodlenet');
-}
-function classifyCanvas(){
-classifier.classify(canvas,gotResult);
-}
-function gotResult(error,results) {
-    if (error) {
-        console.log(E);
-    }
-    console.log(results);
-    document.getElementById("label").innerHTML="Label:"+results[0].label;
-    document.getElementById('confidence').innerHTML="Confidence:"+Math.round(results[0].confidence*100)+"%";
-    utterThis=new SpeechSynthesisUtterance(results[0].label);
-    SpeechSynthesis.speak(utterThis);
 }
